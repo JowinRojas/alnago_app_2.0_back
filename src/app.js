@@ -1,8 +1,7 @@
 
-import express from 'express'
-
+import express from 'express';
 export const server = express();
-require("dotenv").config();
+import morgan from 'morgan';
 
 // const morgan = require('morgan');
 // const cors = require('cors');
@@ -15,7 +14,7 @@ require("dotenv").config();
 
 
 //MIDDLEWARES - DE FASTZODE
-// server.use(morgan('dev'));
+ server.use(morgan('dev'));
 // server.use(express.json());
 // server.use(cookieParser());
 
