@@ -4,6 +4,8 @@ import { generatePublicURI } from '../controllers/googleApi.controller.js';
 
 export const googleApiRouter = Router();
 
+
+//GET
 //http://localhost:4000/google
 googleApiRouter.get('/', async (request, response)=>{
     try {

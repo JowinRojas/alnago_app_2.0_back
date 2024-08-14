@@ -6,7 +6,6 @@ const { PORT } = process.env;
 
 // const mongoose = require('mongoose');
 
-
 const main = async () => {
     try {
         //await mongoose.connect(DATA_BASE_LINK);
