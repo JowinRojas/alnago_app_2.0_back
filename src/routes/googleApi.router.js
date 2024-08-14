@@ -1,13 +1,13 @@
 
 import { Router } from 'express';
-import { uploadFile } from '../controllers/googleApi.controller.js';
+import { generatePublicURI } from '../controllers/googleApi.controller.js';
 
 export const googleApiRouter = Router();
 
 //http://localhost:4000/google
-googleApiRouter.get('/google', async (request, response)=>{
+googleApiRouter.get('/', async (request, response)=>{
     try {
-        const upload = await uploadFile();
+        const upload = await generatePublicURI();
         response.json(upload)
     } catch (error) {
         console.log(error)

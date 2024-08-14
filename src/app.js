@@ -11,7 +11,7 @@ import { googleApiRouter } from './routes/googleApi.router.js';
 // server.use(bodyParser.json({ limit: '50mb' }));
 
 server.use(morgan('dev'));
-server.use('/', googleApiRouter);
+server.use('/google', googleApiRouter);
 // server.use(express.json());
 // server.use(cookieParser());
 
