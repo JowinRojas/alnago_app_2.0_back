@@ -3,6 +3,7 @@ import express from 'express';
 export const server = express();
 import morgan from 'morgan';
 import { googleApiRouter } from './routes/googleApi.router.js';
+import { pruebaRouter } from './routes/prueba.router.js';
 
 // const cors = require('cors');
 // const cookieParser = require('cookie-parser');
@@ -12,6 +13,7 @@ import { googleApiRouter } from './routes/googleApi.router.js';
 
 server.use(morgan('dev'));
 server.use('/google', googleApiRouter);
+server.use('/prueba', pruebaRouter);
 // server.use(express.json());
 // server.use(cookieParser());
 
