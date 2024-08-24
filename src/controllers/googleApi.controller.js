@@ -36,11 +36,10 @@ export const uploadFile = async ()=>{
             },
             media: {
                 mimeType: 'image/jpg',
-                body: fs.createReadStream(filePath)
+                body: fs.createReadStream(filePath2)
             }
         })
 
-        console.log(response)
         return response
 
     } catch (error) {
@@ -48,19 +47,20 @@ export const uploadFile = async ()=>{
     }
 }
 
+
 export const generatePublicURI = async ()=>{
     const url = await uploadFile();
     try {
         const fileId = url.data.id
         //configurar los permisos del archivo
-        const urlPublica = await drive.permissions.create({
+        drive.permissions.create({
             fileId: fileId,
             requestBody:{
                 role: 'reader',
                 type: 'anyone',
             }
         })
-        const result = await drive.files.get({
+        const result = drive.files.get({
             fileId: fileId,
             //el content es para que se descargue directamente
             fields: 'webViewLink',
