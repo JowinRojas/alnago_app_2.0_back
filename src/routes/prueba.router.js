@@ -7,7 +7,7 @@ export const pruebaRouter = Router();
 //http://localhost:4000/prueba
 pruebaRouter.get('/', async (request, response)=>{
     try {
-        response.json("prueba correcta");
+        response.status(200).json("prueba correcta");
     } catch (error) {
         console.log(error)
     }
