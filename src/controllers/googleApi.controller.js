@@ -18,14 +18,13 @@ oauth2Client.setCredentials({refresh_token: REFRESH_TOKEN})
     
     
 const filePath = path.join("src/imagenes/", 'mugen.jpg');
-const filePath2 = path.join("src/imagenes/",'naruto.jpg');
 
 const drive = google.drive({
         version:'v3',
         auth: oauth2Client
 })
 
-export const uploadFile = async ()=>{
+export const uploadFile = async (filePath)=>{
     try {
 
         const response = await drive.files.create({
@@ -36,10 +35,10 @@ export const uploadFile = async ()=>{
             },
             media: {
                 mimeType: 'image/jpg',
-                body: fs.createReadStream(filePath2)
+                body: fs.createReadStream(filePath)
             }
         })
-
+        
         return response
 
     } catch (error) {
@@ -48,23 +47,24 @@ export const uploadFile = async ()=>{
 }
 
 
-export const generatePublicURI = async ()=>{
-    const url = await uploadFile();
+export const generatePublicURI = async (filePath)=>{
+    const url = await uploadFile(filePath);
     try {
         const fileId = url.data.id
         //configurar los permisos del archivo
-        drive.permissions.create({
+        await drive.permissions.create({
             fileId: fileId,
             requestBody:{
                 role: 'reader',
                 type: 'anyone',
             }
         })
-        const result = drive.files.get({
+        const result = await drive.files.get({
             fileId: fileId,
             //el content es para que se descargue directamente
             fields: 'webViewLink',
         })
+        
         return result.data;
     } catch (error) {
         console.log(error)
