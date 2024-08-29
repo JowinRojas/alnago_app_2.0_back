@@ -1,14 +1,11 @@
 
 import { Router } from 'express';
-import { generatePublicURI } from '../controllers/googleApi.controller.js';
-
+import { generatePublicURI } from './googleApi.controller.js';
 import multer from 'multer';
 const uploadMiddleware = multer({dest: 'src/imagenes/'})
-
 import fs from 'fs';
 
 export const googleApiRouter = Router();
-
 
 //GET
 //http://localhost:4000/google
@@ -25,13 +22,11 @@ googleApiRouter.get('/', async (request, response)=>{
 //GET
 //http://localhost:4000/google/image
 googleApiRouter.post('/image',uploadMiddleware.single('file'), async (request, response)=>{
-    // console.log(request.file) 
-    // console.log(request.body)
+   
     const { originalname, path } = request.file; 
     const parts = originalname.split('.');
     const ext = parts[parts.length - 1];
     const newPath = path+'.'+ext;
-    console.log(newPath)
     fs.renameSync(path, newPath);
 
     try {

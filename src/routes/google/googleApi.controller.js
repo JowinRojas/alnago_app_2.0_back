@@ -1,12 +1,8 @@
 import dotenv from 'dotenv';
 import fs from 'fs';
-import path from 'path';
 dotenv.config();
 import { google } from 'googleapis';
 const { GOOGLE_ID, GOOGLE_SECRET, GOOGLE_REDIRECT, REFRESH_TOKEN } = process.env;
-
-//const oauth2Client = new google.oauth2( GOOGLE_ID , GOOGLE_SECRET, GOOGLE_REDIRECT, REFRESH_TOKEN)
-
 
 const oauth2Client = new google.auth.OAuth2(
     GOOGLE_ID,
@@ -16,14 +12,13 @@ const oauth2Client = new google.auth.OAuth2(
     
 oauth2Client.setCredentials({refresh_token: REFRESH_TOKEN})
     
-    
-const filePath = path.join("src/imagenes/", 'mugen.jpg');
 
 const drive = google.drive({
         version:'v3',
         auth: oauth2Client
 })
 
+//Subir el archivo al drive
 export const uploadFile = async (filePath)=>{
     try {
 
@@ -46,12 +41,13 @@ export const uploadFile = async (filePath)=>{
     }
 }
 
-
+//Dar permisos y obtener la uri publica
 export const generatePublicURI = async (filePath)=>{
     const url = await uploadFile(filePath);
     try {
         const fileId = url.data.id
         //configurar los permisos del archivo
+        //el await es necesario asi diga que no
         await drive.permissions.create({
             fileId: fileId,
             requestBody:{
@@ -59,6 +55,7 @@ export const generatePublicURI = async (filePath)=>{
                 type: 'anyone',
             }
         })
+        //el await es necesario asi diga que no
         const result = await drive.files.get({
             fileId: fileId,
             //el content es para que se descargue directamente
@@ -66,6 +63,7 @@ export const generatePublicURI = async (filePath)=>{
         })
         
         return result.data;
+
     } catch (error) {
         console.log(error)
     }
