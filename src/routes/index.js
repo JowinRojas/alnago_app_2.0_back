@@ -7,6 +7,7 @@ export const router = Router();
 
 //http://localhost:4000/google
 router.use('/google', googleApiRouter);
+
 //http://localhost:4000/user
 router.use('/user', userRouter);
-// router.use('/coment', comentRouter);
+

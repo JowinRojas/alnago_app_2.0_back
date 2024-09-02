@@ -14,9 +14,7 @@ server.use(morgan('dev'));
 server.use(express.json());
 // server.use(cookieParser());
 //CORSs
-server.use(cors({
-    credentials:true,
-}));
+server.use(cors());
 
 server.use('/', router);
 

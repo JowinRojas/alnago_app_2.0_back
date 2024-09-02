@@ -11,8 +11,8 @@ export const googleApiRouter = Router();
 //http://localhost:4000/google
 googleApiRouter.get('/', async (request, response)=>{
     try {
-        const upload = await generatePublicURI();
-        response.json(upload)
+        
+        response.json('funca')
     } catch (error) {
         console.log(error)
     }
@@ -31,7 +31,6 @@ googleApiRouter.post('/image',uploadMiddleware.single('file'), async (request, r
 
     try {
         const uri = await generatePublicURI(newPath)
-        console.log(uri)
         response.json(uri)
     } catch (error) {
         console.log(error)
