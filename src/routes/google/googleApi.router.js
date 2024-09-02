@@ -1,6 +1,6 @@
 
 import { Router } from 'express';
-import { generatePublicURI } from './googleApi.controller.js';
+import { createFolder, generatePublicURI } from './googleApi.controller.js';
 import multer from 'multer';
 const uploadMiddleware = multer({dest: 'src/imagenes/'})
 import fs from 'fs';
@@ -18,8 +18,18 @@ googleApiRouter.get('/', async (request, response)=>{
     }
 })
 
+//http://localhost:4000/google/createFolder
+googleApiRouter.get('/createFolder', async (request, response)=>{
+    try {
+        const drive = await createFolder();
+        response.json(drive)
+    } catch (error) {
+        console.log(error)
+    }
+})
 
-//GET
+
+//POST
 //http://localhost:4000/google/image
 googleApiRouter.post('/image',uploadMiddleware.single('file'), async (request, response)=>{
    

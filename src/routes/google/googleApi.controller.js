@@ -70,3 +70,25 @@ export const generatePublicURI = async (filePath)=>{
         console.log(error)
     }
 }
+
+
+
+export const createFolder = async() => {
+    
+    const fileMetadata = {
+      name: 'Carpeta Ejemplo',
+      mimeType: 'application/vnd.google-apps.folder',
+    };
+
+    try {
+      const file = await drive.files.create({
+        requestBody: fileMetadata,
+        fields: 'id',
+      });
+      console.log('Folder Id:', file.data.id);
+      return file.data.id;
+    } catch (err) {
+      // TODO(developer) - Handle error
+      throw err;
+    }
+  }
