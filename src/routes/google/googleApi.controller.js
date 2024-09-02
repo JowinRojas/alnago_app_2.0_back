@@ -4,9 +4,10 @@ dotenv.config();
 import { google } from 'googleapis';
 const { GOOGLE_ID, GOOGLE_SECRET, GOOGLE_REDIRECT, REFRESH_TOKEN } = process.env;
 
+
 const oauth2Client = new google.auth.OAuth2(
     GOOGLE_ID,
-    GOOGLE_SECRET,
+    GOOGLE_SECRET, 
     GOOGLE_REDIRECT
 )
     
@@ -40,6 +41,7 @@ export const uploadFile = async (filePath)=>{
         console.log(error)
     }
 }
+
 
 //Dar permisos y obtener la uri publica
 export const generatePublicURI = async (filePath)=>{

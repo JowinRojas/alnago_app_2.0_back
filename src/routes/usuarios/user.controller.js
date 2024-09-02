@@ -11,7 +11,12 @@ export const createUser = async ({username, password, email})=> {
 }
 
 
-// export const getUserByName = async ({username})=>{
-//     const userFromDataBase = await UserModel.findOne({username});
-//     return userFromDataBase.toJSON();
-// }
+export const getUserByName = async ({username})=>{
+
+    const userFromDataBase = await UserModel.findOne({username});
+    if(userFromDataBase){
+        return userFromDataBase.toJSON();
+    } else {
+        return false;
+    }
+}

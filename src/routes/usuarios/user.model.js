@@ -21,6 +21,11 @@ const UserSchema = new Schema({
         required: true,
         unique: true,
     },
+    docType: {
+        type: ['cc', 'ci', 'cc'],
+        required: true,
+        unique: true,
+    },
 
     date: { 
         type: Date, 
