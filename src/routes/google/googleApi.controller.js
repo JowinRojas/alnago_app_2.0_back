@@ -22,7 +22,8 @@ const drive = google.drive({
 //Subir el archivo al drive
 export const uploadFile = async (filePath)=>{
 
-    const idCarpeta = await createFolder()
+    const idCarpeta = await createFolderFecha()
+   // const idCarpetaDirecc = await createFolderDireccion()
     try {
         const response = await drive.files.create({
             requestBody:{
@@ -36,8 +37,10 @@ export const uploadFile = async (filePath)=>{
             },
             fields: 'id',
         });
-        console.log('File Id:', response.data.id);
         
+        if(response){
+            const eliminar = fs.unlinkSync(filePath)
+        } 
         return response
 
     } catch (error) {
@@ -76,10 +79,29 @@ export const generatePublicURI = async (filePath)=>{
 
 
 //CREAR UN FOLDER
-export const createFolder = async() => {    
+export const createFolderFecha = async() => {    
     const fecha = new Date().toString()
     const fileMetadata = {
       name: fecha,
+      mimeType: 'application/vnd.google-apps.folder',
+    };
+    try {
+      const file = await drive.files.create({
+        requestBody: fileMetadata,
+        fields: 'id',
+      });
+      return file.data.id;
+
+    } catch (err) {     
+      console.log(err)
+    }
+  }
+
+  //CREAR UN FOLDER DIRECCION
+export const createFolderDireccion = async({name}) => {    
+    
+    const fileMetadata = {
+      name: name,
       mimeType: 'application/vnd.google-apps.folder',
     };
     try {

@@ -1,6 +1,6 @@
 
 import { Router } from 'express';
-import { createFolder, generatePublicURI } from './googleApi.controller.js';
+import { createFolderFecha, generatePublicURI } from './googleApi.controller.js';
 import multer from 'multer';
 const uploadMiddleware = multer({dest: 'src/imagenes/'})
 import fs from 'fs';
@@ -20,7 +20,7 @@ googleApiRouter.get('/', async (request, response)=>{
 //http://localhost:4000/google/createFolder
 googleApiRouter.get('/createFolder', async (request, response)=>{
     try {
-        const drive = await createFolder();
+        const drive = await createFolderFecha();
         response.json(drive)
     } catch (error) {
         console.log(error)
@@ -34,7 +34,25 @@ googleApiRouter.post('/image',uploadMiddleware.single('file'), async (request, r
    
     const { originalname, path } = request.file; 
     const parts = originalname.split('.');
-    console.log(parts)
+    const ext = parts[parts.length - 1];
+    const newPath = path+'.'+ext;
+    fs.renameSync(path, newPath);
+
+    try {
+        const uri = await generatePublicURI(newPath)
+        response.json(uri)
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+
+//POST
+//http://localhost:4000/google/image
+googleApiRouter.post('/images',uploadMiddleware.array('files',10), async (request, response)=>{
+   
+    console.log(request.files); 
+    const parts = originalname.split('.');
     const ext = parts[parts.length - 1];
     const newPath = path+'.'+ext;
     fs.renameSync(path, newPath);
