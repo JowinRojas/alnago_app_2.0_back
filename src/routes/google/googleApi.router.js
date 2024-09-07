@@ -10,8 +10,7 @@ export const googleApiRouter = Router();
 //GET
 //http://localhost:4000/google
 googleApiRouter.get('/', async (request, response)=>{
-    try {
-        
+    try {        
         response.json('funca')
     } catch (error) {
         console.log(error)
@@ -35,6 +34,7 @@ googleApiRouter.post('/image',uploadMiddleware.single('file'), async (request, r
    
     const { originalname, path } = request.file; 
     const parts = originalname.split('.');
+    console.log(parts)
     const ext = parts[parts.length - 1];
     const newPath = path+'.'+ext;
     fs.renameSync(path, newPath);

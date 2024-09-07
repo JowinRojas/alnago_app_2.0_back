@@ -12,28 +12,31 @@ const oauth2Client = new google.auth.OAuth2(
 )
     
 oauth2Client.setCredentials({refresh_token: REFRESH_TOKEN})
-    
 
 const drive = google.drive({
         version:'v3',
         auth: oauth2Client
 })
 
+
 //Subir el archivo al drive
 export const uploadFile = async (filePath)=>{
-    try {
 
+    const idCarpeta = await createFolder()
+    try {
         const response = await drive.files.create({
             requestBody:{
                 // Este es el nombre con el que se sube el archivo al google drive
-                name:'imagenesDeNaruto.jpg',
-                mimeType: 'image/jpg'
+                name:'imagenesDeNaruto.jpg',                
+                parents: [idCarpeta],
             },
             media: {
                 mimeType: 'image/jpg',
                 body: fs.createReadStream(filePath)
-            }
-        })
+            },
+            fields: 'id',
+        });
+        console.log('File Id:', response.data.id);
         
         return response
 
@@ -43,7 +46,7 @@ export const uploadFile = async (filePath)=>{
 }
 
 
-//Dar permisos y obtener la uri publica
+//Dar permisos y obtener la uri publica de un archivo
 export const generatePublicURI = async (filePath)=>{
     const url = await uploadFile(filePath);
     try {
@@ -72,23 +75,21 @@ export const generatePublicURI = async (filePath)=>{
 }
 
 
-
-export const createFolder = async() => {
-    
+//CREAR UN FOLDER
+export const createFolder = async() => {    
+    const fecha = new Date().toString()
     const fileMetadata = {
-      name: 'Carpeta Ejemplo',
+      name: fecha,
       mimeType: 'application/vnd.google-apps.folder',
     };
-
     try {
       const file = await drive.files.create({
         requestBody: fileMetadata,
         fields: 'id',
       });
-      console.log('Folder Id:', file.data.id);
       return file.data.id;
-    } catch (err) {
-      // TODO(developer) - Handle error
-      throw err;
+
+    } catch (err) {     
+      console.log(err)
     }
   }

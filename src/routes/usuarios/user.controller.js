@@ -1,6 +1,5 @@
 import { UserModel } from "./user.model.js"
 
-//----REGISTRAR UN NUEVO USER------
 export const createUser = async ({username, password, email})=> {
     const newUser = await UserModel.create({
         username,
