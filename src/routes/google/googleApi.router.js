@@ -1,9 +1,10 @@
 
 import { Router } from 'express';
-import { createFolderFecha, generatePublicURI } from './googleApi.controller.js';
+import { createFolderFecha, generatePublicURI, uploadFile } from './googleApi.controller.js';
 import multer from 'multer';
 const uploadMiddleware = multer({dest: 'src/imagenes/'})
 import fs from 'fs';
+
 
 export const googleApiRouter = Router();
 
@@ -17,22 +18,12 @@ googleApiRouter.get('/', async (request, response)=>{
     }
 })
 
-//http://localhost:4000/google/createFolder
-googleApiRouter.get('/createFolder', async (request, response)=>{
-    try {
-        const drive = await createFolderFecha();
-        response.json(drive)
-    } catch (error) {
-        console.log(error)
-    }
-})
-
 
 //POST
 //http://localhost:4000/google/image
 googleApiRouter.post('/image',uploadMiddleware.single('file'), async (request, response)=>{
-   
-    const { originalname, path } = request.file; 
+    
+    const { originalname, path } = request.file;
     const parts = originalname.split('.');
     const ext = parts[parts.length - 1];
     const newPath = path+'.'+ext;
@@ -48,19 +39,26 @@ googleApiRouter.post('/image',uploadMiddleware.single('file'), async (request, r
 
 
 //POST
-//http://localhost:4000/google/image
-googleApiRouter.post('/images',uploadMiddleware.array('files',10), async (request, response)=>{
-   
-    console.log(request.files); 
-    const parts = originalname.split('.');
-    const ext = parts[parts.length - 1];
-    const newPath = path+'.'+ext;
-    fs.renameSync(path, newPath);
-
+//http://localhost:4000/google/images
+googleApiRouter.post('/images',uploadMiddleware.array('fotos'), async (request, response)=>{
+    
+    let fotos = [];
+    fotos = request.body.fotos;
+    
     try {
-        const uri = await generatePublicURI(newPath)
-        response.json(uri)
+        if(fotos){
+            const idCarpeta = await createFolderFecha();            
+            if(idCarpeta){
+                 fotos.map( async foto =>  {            
+                    await uploadFile( foto, idCarpeta);
+                })
+            }
+        }
+
+        response.json('imagenes subidas');
+    
     } catch (error) {
+
         console.log(error)
     }
 })

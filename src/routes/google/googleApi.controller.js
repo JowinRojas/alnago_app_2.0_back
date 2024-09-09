@@ -20,17 +20,25 @@ const drive = google.drive({
 
 
 //Subir el archivo al drive
-export const uploadFile = async (filePath)=>{
+export const uploadFile = async (filePath, idCarpeta)=>{
 
-    const idCarpeta = await createFolderFecha()
-   // const idCarpetaDirecc = await createFolderDireccion()
+  console.log(filePath)
+    let requestBody = {};
+
+    if (idCarpeta) {
+       requestBody = {
+        name: 'pepito',
+        parents: [idCarpeta],
+      }  
+    } else {
+       requestBody = {
+        name: 'pepito',
+      }
+    }
+
     try {
         const response = await drive.files.create({
-            requestBody:{
-                // Este es el nombre con el que se sube el archivo al google drive
-                name:'imagenesDeNaruto.jpg',                
-                parents: [idCarpeta],
-            },
+            requestBody,
             media: {
                 mimeType: 'image/jpg',
                 body: fs.createReadStream(filePath)
@@ -39,13 +47,15 @@ export const uploadFile = async (filePath)=>{
         });
         
         if(response){
-            const eliminar = fs.unlinkSync(filePath)
-        } 
+             const eliminar = fs.unlinkSync(filePath)
+         }
+         
         return response
 
     } catch (error) {
         console.log(error)
-    }
+    } 
+
 }
 
 
@@ -83,25 +93,6 @@ export const createFolderFecha = async() => {
     const fecha = new Date().toString()
     const fileMetadata = {
       name: fecha,
-      mimeType: 'application/vnd.google-apps.folder',
-    };
-    try {
-      const file = await drive.files.create({
-        requestBody: fileMetadata,
-        fields: 'id',
-      });
-      return file.data.id;
-
-    } catch (err) {     
-      console.log(err)
-    }
-  }
-
-  //CREAR UN FOLDER DIRECCION
-export const createFolderDireccion = async({name}) => {    
-    
-    const fileMetadata = {
-      name: name,
       mimeType: 'application/vnd.google-apps.folder',
     };
     try {
