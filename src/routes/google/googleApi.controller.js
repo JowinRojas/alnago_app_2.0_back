@@ -22,20 +22,19 @@ const drive = google.drive({
 //Subir el archivo al drive
 export const uploadFile = async (filePath, idCarpeta)=>{
 
-  console.log(filePath)
     let requestBody = {};
 
     if (idCarpeta) {
        requestBody = {
-        name: 'pepito',
+        name: 'conCarpeta',
         parents: [idCarpeta],
       }  
     } else {
        requestBody = {
-        name: 'pepito',
+        name: 'SinCarpeta',
       }
     }
-
+    
     try {
         const response = await drive.files.create({
             requestBody,
@@ -60,8 +59,10 @@ export const uploadFile = async (filePath, idCarpeta)=>{
 
 
 //Dar permisos y obtener la uri publica de un archivo
-export const generatePublicURI = async (filePath)=>{
-    const url = await uploadFile(filePath);
+export const generatePublicURI = async (filePath, idCarpeta)=>{
+    
+    const url = await uploadFile(filePath, idCarpeta);
+
     try {
         const fileId = url.data.id
         //configurar los permisos del archivo
