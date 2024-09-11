@@ -42,19 +42,27 @@ googleApiRouter.post('/image',uploadMiddleware.single('file'), async (request, r
 //http://localhost:4000/google/images
 googleApiRouter.post('/images',uploadMiddleware.array('fotos'), async (request, response)=>{
     
-    let fotos = [];
-    fotos = request.body.fotos;
+    const fotos = request.files
+    const idCarpeta = await createFolderFecha();
+    
+    if(idCarpeta){
+            fotos.map( async foto => {
+                const { originalname, path } = foto;
+                const parts = originalname.split('.');
+                const ext = parts[parts.length - 1];
+                const newPath = path+'.'+ext;
+                fs.renameSync(path, newPath);
+                
+                try {
+                    await uploadFile(newPath, idCarpeta)
+                } catch (error) {
+                    console.log(error)
+                }
+            })
+        }
     
     try {
-        if(fotos){
-            const idCarpeta = await createFolderFecha();            
-            if(idCarpeta){
-                 fotos.map( async foto =>  {            
-                    await uploadFile( foto, idCarpeta);
-                })
-            }
-        }
-
+        
         response.json('imagenes subidas');
     
     } catch (error) {
