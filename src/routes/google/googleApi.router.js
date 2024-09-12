@@ -41,9 +41,15 @@ googleApiRouter.post('/image',uploadMiddleware.single('file'), async (request, r
 //POST
 //http://localhost:4000/google/images
 googleApiRouter.post('/images',uploadMiddleware.array('fotos'), async (request, response)=>{
-    
+
+    const comentarios = request.body.comentarios
     const fotos = request.files
     const idCarpeta = await createFolderFecha();
+    const yeifet = comentarios.split('@%');
+
+
+    console.log(yeifet)
+
     
     if(idCarpeta){
             fotos.map( async foto => {
