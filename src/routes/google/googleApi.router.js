@@ -43,8 +43,10 @@ googleApiRouter.post('/image',uploadMiddleware.single('file'), async (request, r
 googleApiRouter.post('/images',uploadMiddleware.array('fotos'), async (request, response)=>{
 
     const comentarios = request.body.comentarios
+    const direccion = request.body.direccion
     const fotos = request.files
-    const idCarpeta = await createFolderFecha();
+    
+    const idCarpeta = await createFolderFecha(direccion);
     const yeifet = comentarios.split('@%');
     const data = yeifet.map( hijodeyeifet => `${hijodeyeifet}\n`);
     
@@ -63,13 +65,12 @@ googleApiRouter.post('/images',uploadMiddleware.array('fotos'), async (request, 
                 fs.renameSync(path, newPath);
                 
                 try {
-                    
                     await uploadFile(newPath, idCarpeta)
-                    await uploadComentarios(comentariosPath, idCarpeta)
                 } catch (error) {
                     console.log(error)
                 }
             })
+            await uploadComentarios(comentariosPath, idCarpeta)
         }
     
     try {
