@@ -1,10 +1,10 @@
 
 import { Router } from 'express';
-import { createFolderFecha, generatePublicURI, uploadFile } from './googleApi.controller.js';
+import { createFolderFecha, generatePublicURI, uploadComentarios, uploadFile } from './googleApi.controller.js';
 import multer from 'multer';
 const uploadMiddleware = multer({dest: 'src/imagenes/'})
 import fs from 'fs';
-
+import path from 'path';
 
 export const googleApiRouter = Router();
 
@@ -46,9 +46,12 @@ googleApiRouter.post('/images',uploadMiddleware.array('fotos'), async (request, 
     const fotos = request.files
     const idCarpeta = await createFolderFecha();
     const yeifet = comentarios.split('@%');
-
-
-    console.log(yeifet)
+    const data = yeifet.map( hijodeyeifet => `${hijodeyeifet}\n`);
+    
+    
+    fs.writeFileSync('archivo.txt', data.toString());
+    const comentariosPath = path.join('archivo.txt');
+    console.log(comentariosPath);
 
     
     if(idCarpeta){
@@ -60,7 +63,9 @@ googleApiRouter.post('/images',uploadMiddleware.array('fotos'), async (request, 
                 fs.renameSync(path, newPath);
                 
                 try {
+                    
                     await uploadFile(newPath, idCarpeta)
+                    await uploadComentarios(comentariosPath, idCarpeta)
                 } catch (error) {
                     console.log(error)
                 }
