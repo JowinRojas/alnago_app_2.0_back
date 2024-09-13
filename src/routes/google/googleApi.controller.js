@@ -21,9 +21,7 @@ const drive = google.drive({
 
 //Subir el archivo al drive
 export const uploadFile = async (filePath, idCarpeta)=>{
-
     let requestBody = {};
-
     if (idCarpeta) {
        requestBody = {
         name: 'conCarpeta',
@@ -34,7 +32,7 @@ export const uploadFile = async (filePath, idCarpeta)=>{
         name: 'SinCarpeta',
       }
     }
-    
+
     try {
         const response = await drive.files.create({
             requestBody,
@@ -46,15 +44,41 @@ export const uploadFile = async (filePath, idCarpeta)=>{
         });
         
         if(response){
-             const eliminar = fs.unlinkSync(filePath)
+            fs.unlinkSync(filePath)
          }
-         
         return response
 
     } catch (error) {
         console.log(error)
     } 
 
+}
+
+
+
+export const uploadComentarios = async (filePath, idCarpeta)=>{
+  try {
+    const response = await drive.files.create({
+        requestBody:{
+          name: 'Comentarios',
+          parents: [idCarpeta],
+        },
+        media: {
+            mimeType: 'text/plain',
+            body: fs.createReadStream(filePath)
+        },
+        fields: 'id',
+    });
+    
+    if(response){
+         fs.unlinkSync(filePath)
+     }
+     
+    return response
+
+} catch (error) {
+    console.log(error)
+} 
 }
 
 
