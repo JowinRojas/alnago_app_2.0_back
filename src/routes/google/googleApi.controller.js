@@ -114,10 +114,10 @@ export const generatePublicURI = async (filePath, idCarpeta)=>{
 
 
 //CREAR UN FOLDER
-export const createFolderFecha = async() => {    
+export const createFolderFecha = async(direccion) => {    
     const fecha = new Date().toString()
     const fileMetadata = {
-      name: fecha,
+      name: direccion + ' '+ fecha,
       mimeType: 'application/vnd.google-apps.folder',
     };
     try {
