@@ -48,15 +48,13 @@ googleApiRouter.post('/images',uploadMiddleware.array('fotos'), async (request, 
     
     const idCarpeta = await createFolderFecha(direccion);
     const yeifet = comentarios.split('@%');
-    const data = yeifet.map( hijodeyeifet => `${hijodeyeifet}\n`);
+    const data = yeifet.map( hijodeyeifet => `${hijodeyeifet}\n\n\n`);
     
-    
-    fs.writeFileSync('archivo.txt', data.toString());
-    const comentariosPath = path.join('archivo.txt');
-    console.log(comentariosPath);
+    fs.writeFileSync('archivo.docx', data.toString());
+    const comentariosPath = path.join('archivo.docx');
 
-    
-    if(idCarpeta){
+    try {
+        if(idCarpeta){
             fotos.map( async foto => {
                 const { originalname, path } = foto;
                 const parts = originalname.split('.');
@@ -72,8 +70,6 @@ googleApiRouter.post('/images',uploadMiddleware.array('fotos'), async (request, 
             })
             await uploadComentarios(comentariosPath, idCarpeta)
         }
-    
-    try {
         
         response.json('imagenes subidas');
     

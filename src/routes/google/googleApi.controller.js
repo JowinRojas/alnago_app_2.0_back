@@ -24,12 +24,12 @@ export const uploadFile = async (filePath, idCarpeta)=>{
     let requestBody = {};
     if (idCarpeta) {
        requestBody = {
-        name: 'conCarpeta',
+        name: 'Fotografia',
         parents: [idCarpeta],
       }  
     } else {
        requestBody = {
-        name: 'SinCarpeta',
+        name: 'Fotografia',
       }
     }
 
@@ -114,7 +114,8 @@ export const generatePublicURI = async (filePath, idCarpeta)=>{
 
 
 //CREAR UN FOLDER
-export const createFolderFecha = async(direccion) => {    
+export const createFolderFecha = async(direccion) => {   
+   
     const fecha = new Date().toString()
     const fileMetadata = {
       name: direccion + ' '+ fecha,
